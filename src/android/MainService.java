@@ -15,8 +15,8 @@ public class MainService extends Service{
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int INTERVAL_TIME = 4000;
-    private long LATITUDE = 0;
-    private long LONGITUDE = 0;
+    private String LATITUDE = "0";
+    private String LONGITUDE = "0";
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
@@ -122,10 +122,10 @@ public class MainService extends Service{
             if(isBetterLocation(loc, previousBestLocation)) {
                 loc.getLatitude();
                 loc.getLongitude();
-                Log.i("MainService", Long.toString(loc.getLatitude()));
-                Log.i("MainService", Long.toString(loc.getLongitude()));
-                Log.i("MainService", Long.toString(LATITUDE));
-                Log.i("MainService", Long.toString(LONGITUDE));
+                Log.i("MainService", String.valueOf(loc.getLatitude()));
+                Log.i("MainService", String.valueOf(loc.getLongitude()));
+                Log.i("MainService", LATITUDE);
+                Log.i("MainService", LONGITUDE);
             }
         }
 
