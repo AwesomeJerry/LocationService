@@ -1,5 +1,4 @@
-package com.example.voorobot;
-
+package jerry.shen.plugin;
 
 import android.app.Service;
 import android.content.Context;
@@ -15,6 +14,9 @@ public class MainService extends Service{
     
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int INTERVAL_TIME = 4000;
+    private long LATIDUDE = 0;
+    private long LONGITUDE = 0;
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
@@ -30,10 +32,21 @@ public class MainService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
         Log.i("MainService", "onStartCommand");
+        LATIDUDE = intent.getLongExtra("latitude");
+        LONGITUDE = intent.getLongExtra("longitude");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        listener = new MyLocationListener();        
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 0, listener);
+        listener = new MyLocationListener();
+        try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, INTERVAL_TIME, 0, listener);
+        } catch (Exception e) {
+            
+        }
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, INTERVAL_TIME, 0, listener);
+        } catch (Exception e) {
+            
+        }
+        
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -109,6 +122,10 @@ public class MainService extends Service{
             if(isBetterLocation(loc, previousBestLocation)) {
                 loc.getLatitude();
                 loc.getLongitude();
+                Log.i("MainService", loc.getLatitude());
+                Log.i("MainService", loc.getLongitude());
+                Log.i("MainService", LATITUDE);
+                Log.i("MainService", LONGITUDE);
             }
         }
 
