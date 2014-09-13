@@ -8,12 +8,12 @@ Prerequisition
 =========
 AndroidManifest.xml
 <code>
-    &ltapplication&gt
-        &ltservice android:name="jerry.shen.plugin.MainService"&gt
-            &ltintent-filter&gt
-                  &ltaction android:name="jerry.shen.plugin.MainService" /&gt
-            &lt/intent-filter&gt
-      &lt/service&gt
-    &lt/application&gt
-</code>
+    <application>
+        <service android:name="jerry.shen.plugin.MainService">
+            <itintent-filter>
+                  <action android:name="jerry.shen.plugin.MainService" />
+            </intent-filter>
+      </service>
+    </application>
+</code>   
 put MainService into ....platforms\android\src\jerry\shen\plugin
