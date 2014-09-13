@@ -11,7 +11,7 @@ public class MainService extends Service{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-        Log.i('MainService', 'onCreate')
+        Log.i("MainService", "onCreate")
 	}
 
 	@Override
