@@ -13,3 +13,5 @@ AndroidManifest.xml
                   <action android:name="jerry.shen.plugin.MainService" />
             </intent-filter>
       </service>
+      
+      platforms\android\src\jerry\shen\plugin
