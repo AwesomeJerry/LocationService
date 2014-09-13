@@ -53,6 +53,7 @@ public class MainService extends Service{
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
+        Log.i("MainService", "onDestroy");
 		super.onDestroy();
 	}
 
