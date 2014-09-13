@@ -23,8 +23,8 @@ public class LocationService extends CordovaPlugin {
                 return true;
             } else if (ACTION_STOP_SERVICE.equals(action)) { 
                 JSONObject arg_object = args.getJSONObject(0);
-                Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
-                this.cordova.getActivity().startActivity(intent);
+                Intent intent = new Intent(this.cordova.getActivity(), MainService.class);
+                this.cordova.getActivity().stopService(intent);
                 callbackContext.success();
                 return true;
             }
