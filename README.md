@@ -7,6 +7,7 @@ cordova plugin add https://github.com/BonerChick/LocationService.git
 Prerequisition
 =========
 AndroidManifest.xml
+'''
 <code>
     <application>
         <service android:name="jerry.shen.plugin.MainService">
@@ -15,5 +16,6 @@ AndroidManifest.xml
             </intent-filter>
       </service>
     </application>
-</code>   
+</code>  
+'''
 put MainService into ....platforms\android\src\jerry\shen\plugin
