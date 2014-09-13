@@ -15,7 +15,7 @@ public class MainService extends Service{
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int INTERVAL_TIME = 4000;
-    private long LATIDUDE = 0;
+    private long LATITUDE = 0;
     private long LONGITUDE = 0;
     public LocationManager locationManager;
     public MyLocationListener listener;
@@ -32,8 +32,8 @@ public class MainService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
         Log.i("MainService", "onStartCommand");
-        LATIDUDE = intent.getLongExtra("latitude");
-        LONGITUDE = intent.getLongExtra("longitude");
+        LATITUDE = intent.getStringExtra("latitude");
+        LONGITUDE = intent.getStringExtra("longitude");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
         try {
@@ -122,10 +122,10 @@ public class MainService extends Service{
             if(isBetterLocation(loc, previousBestLocation)) {
                 loc.getLatitude();
                 loc.getLongitude();
-                Log.i("MainService", loc.getLatitude());
-                Log.i("MainService", loc.getLongitude());
-                Log.i("MainService", LATITUDE);
-                Log.i("MainService", LONGITUDE);
+                Log.i("MainService", Long.toString(loc.getLatitude()));
+                Log.i("MainService", Long.toString(loc.getLongitude()));
+                Log.i("MainService", Long.toString(LATITUDE));
+                Log.i("MainService", Long.toString(LONGITUDE));
             }
         }
 
