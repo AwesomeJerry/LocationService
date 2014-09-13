@@ -17,6 +17,7 @@ public class MainService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
+        Log.i("MainService", "onStartCommand");
 		return super.onStartCommand(intent, flags, startId);
 	}
 
