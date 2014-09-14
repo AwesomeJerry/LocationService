@@ -1,11 +1,28 @@
 package jerry.shen.plugin;
 
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -17,6 +34,7 @@ public class MainService extends Service{
     private static final int INTERVAL_TIME = 4000;
     private String LATITUDE = "0";
     private String LONGITUDE = "0";
+    private String REGID = "";
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
@@ -34,6 +52,7 @@ public class MainService extends Service{
         Log.i("MainService", "onStartCommand");
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
+        REGID = intent.getStringExtra("regid");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
         try {
@@ -54,6 +73,7 @@ public class MainService extends Service{
 	public void onDestroy() {
 		// TODO Auto-generated method stub
         Log.i("MainService", "onDestroy");
+        locationManager.removeUpdates(listener);
 		super.onDestroy();
 	}
 
@@ -121,12 +141,18 @@ public class MainService extends Service{
         {
             Log.i("**************************************", "Location changed");
             if(isBetterLocation(loc, previousBestLocation)) {
-                loc.getLatitude();
-                loc.getLongitude();
+                Double curLat = loc.getLatitude();
+                Double curLng = loc.getLongitude();
                 Log.i("MainService", String.valueOf(loc.getLatitude()));
                 Log.i("MainService", String.valueOf(loc.getLongitude()));
                 Log.i("MainService", LATITUDE);
                 Log.i("MainService", LONGITUDE);
+                Double lat = Double.parseDouble(LATITUDE);
+                Double lng = Double.parseDouble(LONGITUDE);
+                if(Math.abs(curLat - lat) < 0.0001 && Math.abs(curLng - lng) < 0.0001) {
+                    Log.i("MainService", "You are there!");
+                    new makeRequest().execute();
+                }
             }
         }
 
@@ -134,7 +160,6 @@ public class MainService extends Service{
         {
 
         }
-
 
         public void onProviderEnabled(String provider)
         {
@@ -147,6 +172,47 @@ public class MainService extends Service{
 
         }
 
+    }
+    
+    private class makeRequest extends AsyncTask<URL, Integer, Long> {
+    	
+        protected Long doInBackground(URL... urls) {
+            HttpClient httpclient =  new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://140.119.19.45/gashatrip/notification/sendNotification.php");
+
+            // Request parameters and other properties.
+            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            params.add(new BasicNameValuePair("regid", REGID));
+
+            //Execute and get the response.
+            try {
+                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {       
+                    try {
+                        // do something useful
+                    } finally {
+                        try {
+                            InputStream instream = entity.getContent();
+                            instream.close();
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(Long result) {
+        }
     }
 
 }
