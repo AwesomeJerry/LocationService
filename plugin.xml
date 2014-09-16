@@ -1,26 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
- 
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-           id="jerry.shen.plugin.LocationService"
-      version="0.1.0">
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="jerry.shen.plugin.LocationService" version="0.1.0">
     <name>LocationService</name>
     <description>Track Location Info in Background</description>
     <license>MIT</license>
     <keywords>phonegap,location,track,background,plugin</keywords>
- 
- 
+
+
     <js-module src="www/locationService.js" name="LocationService">
         <clobbers target="window.locationService" />
     </js-module>
- 
+
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="LocationService">
-                <param name="android-package" value="jerry.shen.plugin.LocationService"/>
+                <param name="android-package" value="jerry.shen.plugin.LocationService" />
             </feature>
         </config-file>
- 
-        <source-file src="src/android/LocationService.java" target-dir="src/jerry/shen/plugin" />      
-     </platform>          
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service android:name="jerry.shen.plugin.MainService" />
+        </config-file>
+
+        <source-file src="src/android/LocationService.java" target-dir="src/jerry/shen/plugin" />
+        <source-file src="src/android/MainService.java" target-dir="src/jerry/shen/plugin" />
+    </platform>
 </plugin>
