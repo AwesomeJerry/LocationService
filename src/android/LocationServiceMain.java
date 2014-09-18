@@ -36,6 +36,7 @@ public class LocationServiceMain extends Service{
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int INTERVAL_TIME = 4000;
+    private String MESSAGE = "GashaTrip";
     private String LATITUDE = "0";
     private String LONGITUDE = "0";
     private String REGID = "";
@@ -56,6 +57,8 @@ public class LocationServiceMain extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
         Log.i("LocationServiceMain", "onStartCommand");
+        MESSAGE = intent.getStringExtra("destination");
+        MESSAGE = "前往" + MESSAGE + "中";
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
         REGID = intent.getStringExtra("regid");
@@ -77,6 +80,19 @@ public class LocationServiceMain extends Service{
         } catch (Exception e) {
             
         }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle("GashaTrip")
+                .setContentText(MESSAGE);
+        Intent resultIntent = new Intent(getApplicationContext(), mainClass);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addParentStack(mainClass);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
         
 		return super.onStartCommand(intent, flags, startId);
 	}

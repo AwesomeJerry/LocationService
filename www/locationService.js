@@ -1,6 +1,7 @@
 var locationService = {
-    startService: function(latitude, longitude, regid, successCallback, errorCallback) {
+    startService: function(destination, latitude, longitude, regid, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, 'LocationService', 'startService',[{
+            'destination': destination,
             'latitude': latitude,
             'longitude': longitude,
             'regid': regid
