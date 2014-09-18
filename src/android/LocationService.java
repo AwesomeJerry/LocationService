@@ -12,18 +12,17 @@ import android.util.Log;
 public class LocationService extends CordovaPlugin {
     public static final String ACTION_START_SERVICE = "startService";
     public static final String ACTION_STOP_SERVICE = "stopService";
-    private String REALNAME = "";
+    private String PACKAGENAME = "";
+    private String CLASSNAME = "";
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
             if (ACTION_START_SERVICE.equals(action)) { 
-                REALNAME = "";
-                REALNAME += this.cordova.getActivity().getPackageName();
-                REALNAME += ".";
-                REALNAME += this.cordova.getActivity().getClass().getSimpleName();
+                PACKAGENAME = this.cordova.getActivity().getPackageName();
+                CLASSNAME = this.cordova.getActivity().getClass().getSimpleName();
                 JSONObject arg_object = args.getJSONObject(0);
-                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("destination",arg_object.getString("destination")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("regid", arg_object.getString("regid")).putExtra("class",REALNAME);
+                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("destination",arg_object.getString("destination")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("regid", arg_object.getString("regid")).putExtra("package",PACKAGENAME).putExtra("class",CLASSNAME);
                 this.cordova.getActivity().startService(intent);
                 callbackContext.success();
                 return true;

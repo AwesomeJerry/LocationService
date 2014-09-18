@@ -30,12 +30,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.net.Uri;
 
 public class LocationServiceMain extends Service{
     
     public static final String BROADCAST_ACTION = "Hello World";
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int INTERVAL_TIME = 4000;
+    private static final int INTERVAL_TIME = 10000;
     private String MESSAGE = "GashaTrip";
     private String LATITUDE = "0";
     private String LONGITUDE = "0";
@@ -44,6 +45,8 @@ public class LocationServiceMain extends Service{
     public MyLocationListener listener;
     public Location previousBestLocation = null;
     public String CLASSNAME = "";
+    public String PACKAGENAME = "";
+    public String REALNAME = "";
     Class<?> mainClass;
 
 	@Override
@@ -62,9 +65,11 @@ public class LocationServiceMain extends Service{
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
         REGID = intent.getStringExtra("regid");
+        PACKAGENAME = intent.getStringExtra("package");
         CLASSNAME = intent.getStringExtra("class");
+        REALNAME = PACKAGENAME + "." + CLASSNAME;
         try {
-            mainClass = Class.forName(CLASSNAME);
+            mainClass = Class.forName(REALNAME);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -187,8 +192,10 @@ public class LocationServiceMain extends Service{
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.drawable.icon)
-                            .setContentTitle("GashaTrip關心您~")
-                            .setContentText("就快到了喔，加把勁吧!!");
+                            .setContentTitle("GashaTrip祝福你")
+                            .setContentText("就快到了喔~ 好好玩(吃)吧")
+                            .setSound(Uri.parse("android.resource://"
+            + PACKAGENAME + "/" + R.raw.dingdong));
                     Intent resultIntent = new Intent(getApplicationContext(), mainClass);
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
                     stackBuilder.addParentStack(mainClass);
