@@ -16,7 +16,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -25,6 +28,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class LocationServiceMain extends Service{
@@ -38,6 +42,8 @@ public class LocationServiceMain extends Service{
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
+    public String CLASSNAME = "";
+    Class<?> mainClass;
 
 	@Override
 	public void onCreate() {
@@ -53,8 +59,14 @@ public class LocationServiceMain extends Service{
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
         REGID = intent.getStringExtra("regid");
+        CLASSNAME = intent.getStringExtra("class");
+        try {
+            mainClass = Class.forName(CLASSNAME);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        listener = new MyLocationListener();
+        listener = new MyLocationListener(this);
         try {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, INTERVAL_TIME, 0, listener);
         } catch (Exception e) {
@@ -137,9 +149,14 @@ public class LocationServiceMain extends Service{
 
     
     public class MyLocationListener implements LocationListener {
-        public void onLocationChanged(final Location loc)
+    	Context callClass;
+        public MyLocationListener(Context LocationServiceMain) {
+			callClass = LocationServiceMain;
+		}
+
+		public void onLocationChanged(final Location loc)
         {
-            Log.i("**************************************", "Location changed");
+            Log.i("LocationServiceMain", "Location changed");
             if(isBetterLocation(loc, previousBestLocation)) {
                 Double curLat = loc.getLatitude();
                 Double curLng = loc.getLongitude();
@@ -149,9 +166,24 @@ public class LocationServiceMain extends Service{
                 Log.i("LocationServiceMain", LONGITUDE);
                 Double lat = Double.parseDouble(LATITUDE);
                 Double lng = Double.parseDouble(LONGITUDE);
-                if(Math.abs(curLat - lat) < 0.0001 && Math.abs(curLng - lng) < 0.0001) {
+                if(Math.abs(curLat - lat) < 0.0003 && Math.abs(curLng - lng) < 0.0003) {
                     Log.i("LocationServiceMain", "You are there!");
-                    new makeRequest().execute();
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.drawable.icon)
+                            .setContentTitle("GashaTrip關心您~")
+                            .setContentText("就快到了喔，加把勁吧!!");
+                    Intent resultIntent = new Intent(getApplicationContext(), mainClass);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                    stackBuilder.addParentStack(mainClass);
+                    stackBuilder.addNextIntent(resultIntent);
+                    PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.notify(1, mBuilder.build());
+                    Intent intent = new Intent(callClass, LocationServiceMain.class);
+                    stopService(intent);
+//                    new makeRequest().execute();
                 }
             }
         }
@@ -177,33 +209,33 @@ public class LocationServiceMain extends Service{
     private class makeRequest extends AsyncTask<URL, Integer, Long> {
     	
         protected Long doInBackground(URL... urls) {
-            HttpClient httpclient =  new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://140.119.19.45/gashatrip/notification/sendNotification.php");
-
-            // Request parameters and other properties.
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("regid", REGID));
-
-            //Execute and get the response.
-            try {
-                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {       
-                    try {
-                        // do something useful
-                    } finally {
-                        try {
-                            InputStream instream = entity.getContent();
-                            instream.close();
-                        } catch (Exception e) {
-                            System.out.println(e);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+//            HttpClient httpclient =  new DefaultHttpClient();
+//            HttpPost httppost = new HttpPost("http://140.119.19.45/gashatrip/notification/sendNotification.php");
+//
+//            // Request parameters and other properties.
+//            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+//            params.add(new BasicNameValuePair("regid", REGID));
+//
+//            //Execute and get the response.
+//            try {
+//                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+//                HttpResponse response = httpclient.execute(httppost);
+//                HttpEntity entity = response.getEntity();
+//                if (entity != null) {       
+//                    try {
+//                        // do something useful
+//                    } finally {
+//                        try {
+//                            InputStream instream = entity.getContent();
+//                            instream.close();
+//                        } catch (Exception e) {
+//                            System.out.println(e);
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            }
             
             return null;
         }

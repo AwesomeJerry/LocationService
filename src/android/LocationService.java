@@ -7,17 +7,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 public class LocationService extends CordovaPlugin {
     public static final String ACTION_START_SERVICE = "startService";
     public static final String ACTION_STOP_SERVICE = "stopService";
+    private String REALNAME = "";
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
             if (ACTION_START_SERVICE.equals(action)) { 
+                REALNAME = "";
+                REALNAME += this.cordova.getActivity().getPackageName();
+                REALNAME += ".";
+                REALNAME += this.cordova.getActivity().getClass().getSimpleName();
                 JSONObject arg_object = args.getJSONObject(0);
-                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("regid", arg_object.getString("regid"));
+                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("regid", arg_object.getString("regid")).putExtra("class",REALNAME);
                 this.cordova.getActivity().startService(intent);
                 callbackContext.success();
                 return true;
