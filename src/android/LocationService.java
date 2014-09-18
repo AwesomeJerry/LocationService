@@ -22,7 +22,7 @@ public class LocationService extends CordovaPlugin {
                 PACKAGENAME = this.cordova.getActivity().getPackageName();
                 CLASSNAME = this.cordova.getActivity().getClass().getSimpleName();
                 JSONObject arg_object = args.getJSONObject(0);
-                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("destination",arg_object.getString("destination")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("regid", arg_object.getString("regid")).putExtra("package",PACKAGENAME).putExtra("class",CLASSNAME);
+                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("destination",arg_object.getString("destination")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("package",PACKAGENAME).putExtra("class",CLASSNAME);
                 this.cordova.getActivity().startService(intent);
                 callbackContext.success();
                 return true;

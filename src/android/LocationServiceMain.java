@@ -40,7 +40,6 @@ public class LocationServiceMain extends Service{
     private String MESSAGE = "GashaTrip";
     private String LATITUDE = "0";
     private String LONGITUDE = "0";
-    private String REGID = "";
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
@@ -64,7 +63,6 @@ public class LocationServiceMain extends Service{
         MESSAGE = "前往" + MESSAGE + "中";
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
-        REGID = intent.getStringExtra("regid");
         PACKAGENAME = intent.getStringExtra("package");
         CLASSNAME = intent.getStringExtra("class");
         REALNAME = PACKAGENAME + "." + CLASSNAME;
@@ -206,7 +204,6 @@ public class LocationServiceMain extends Service{
                     mNotificationManager.notify(1, mBuilder.build());
                     Intent intent = new Intent(callClass, LocationServiceMain.class);
                     stopService(intent);
-//                    new makeRequest().execute();
                 }
             }
         }
@@ -228,46 +225,4 @@ public class LocationServiceMain extends Service{
         }
 
     }
-    
-    private class makeRequest extends AsyncTask<URL, Integer, Long> {
-    	
-        protected Long doInBackground(URL... urls) {
-//            HttpClient httpclient =  new DefaultHttpClient();
-//            HttpPost httppost = new HttpPost("http://140.119.19.45/gashatrip/notification/sendNotification.php");
-//
-//            // Request parameters and other properties.
-//            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-//            params.add(new BasicNameValuePair("regid", REGID));
-//
-//            //Execute and get the response.
-//            try {
-//                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-//                HttpResponse response = httpclient.execute(httppost);
-//                HttpEntity entity = response.getEntity();
-//                if (entity != null) {       
-//                    try {
-//                        // do something useful
-//                    } finally {
-//                        try {
-//                            InputStream instream = entity.getContent();
-//                            instream.close();
-//                        } catch (Exception e) {
-//                            System.out.println(e);
-//                        }
-//                    }
-//                }
-//            } catch (Exception e) {
-//                System.out.println(e);
-//            }
-            
-            return null;
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-        }
-
-        protected void onPostExecute(Long result) {
-        }
-    }
-
 }
