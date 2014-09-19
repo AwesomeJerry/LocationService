@@ -32,13 +32,17 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.net.Uri;
+import android.R;
 
 public class LocationServiceMain extends Service{
     
-    public static final String BROADCAST_ACTION = "Hello World";
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int INTERVAL_TIME = 10000;
-    private String MESSAGE = "GashaTrip";
+    private int TWO_MINUTES = 1000 * 60 * 2;
+    private int CHECK_INTERVAL = 10000;
+    private double ARRIVED_RANGE = 0.0003;
+    private String ARRIVED_TITLE = "GashaTrip";
+    private String ARRIVED_MESSAGE = "關心您";
+    private String START_TITLE = "關心您";
+    private String START_MESSAGE = "關心您";
     private String LATITUDE = "0";
     private String LONGITUDE = "0";
     public LocationManager locationManager;
@@ -60,8 +64,12 @@ public class LocationServiceMain extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
         Log.i("LocationServiceMain", "onStartCommand");
-        MESSAGE = intent.getStringExtra("destination");
-        MESSAGE = "前往" + MESSAGE + "中";
+        START_TITLE = intent.getStringExtra("start_title");
+        START_MESSAGE = intent.getStringExtra("start_message");
+        ARRIVED_TITLE = intent.getStringExtra("arrived_title");
+        ARRIVED_MESSAGE = intent.getStringExtra("arrived_message");
+        CHECK_INTERVAL =  Integer.parseInt(intent.getStringExtra("check_interval"));
+        ARRIVED_RANGE = Double.parseDouble(intent.getStringExtra("arrived_range"));
         LATITUDE = intent.getStringExtra("latitude");
         LONGITUDE = intent.getStringExtra("longitude");
         PACKAGENAME = intent.getStringExtra("package");
@@ -75,20 +83,21 @@ public class LocationServiceMain extends Service{
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener(this);
         try {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, INTERVAL_TIME, 0, listener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, CHECK_INTERVAL, 0, listener);
         } catch (Exception e) {
             
         }
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, INTERVAL_TIME, 0, listener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, CHECK_INTERVAL, 0, listener);
         } catch (Exception e) {
             
         }
+        int iconNo = getResources().getIdentifier("icon", "drawable", PACKAGENAME);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.icon)
-                .setContentTitle("GashaTrip")
-                .setContentText(MESSAGE);
+                .setSmallIcon(iconNo)
+                .setContentTitle(START_TITLE)
+                .setContentText(START_MESSAGE);
         Intent resultIntent = new Intent(getApplicationContext(), mainClass);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
         stackBuilder.addParentStack(mainClass);
@@ -186,15 +195,16 @@ public class LocationServiceMain extends Service{
                 Log.i("LocationServiceMain", LONGITUDE);
                 Double lat = Double.parseDouble(LATITUDE);
                 Double lng = Double.parseDouble(LONGITUDE);
-                if(Math.abs(curLat - lat) < 0.0003 && Math.abs(curLng - lng) < 0.0003) {
+                if(Math.abs(curLat - lat) < ARRIVED_RANGE && Math.abs(curLng - lng) < ARRIVED_RANGE) {
                     Log.i("LocationServiceMain", "You are there!");
+                    int iconNo = getResources().getIdentifier("icon", "drawable", PACKAGENAME);
+                    int soundNo = getResources().getIdentifier("dingdong", "raw", PACKAGENAME);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(R.drawable.icon)
-                            .setContentTitle("GashaTrip祝福你")
-                            .setContentText("就快到了喔~ 好好玩(吃)吧")
-                            .setSound(Uri.parse("android.resource://"
-            + PACKAGENAME + "/" + R.raw.dingdong));
+                            .setSmallIcon(iconNo)
+                            .setContentTitle(ARRIVED_TITLE)
+                            .setContentText(ARRIVED_MESSAGE)
+                            .setSound(Uri.parse("android.resource://" + PACKAGENAME + "/raw/dingdong"));
                     Intent resultIntent = new Intent(getApplicationContext(), mainClass);
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
                     stackBuilder.addParentStack(mainClass);
