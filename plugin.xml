@@ -21,6 +21,7 @@
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service android:name="jerry.shen.plugin.LocationServiceMain" />
         </config-file>
+        <source-file src="src/android/android-support-v13.jar" target-dir="lib" />
         <source-file src="src/android/LocationService.java" target-dir="src/jerry/shen/plugin" />
         <source-file src="src/android/LocationServiceMain.java" target-dir="src/jerry/shen/plugin" />
     </platform>
