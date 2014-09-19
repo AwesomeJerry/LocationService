@@ -4,7 +4,7 @@ var locationService = {
             'arrived_title': arrived_title,
             'arrived_message': arrived_message,
             'start_title': start_title,
-            'stop_message': stop_message,
+            'start_message': stop_message,
             'latitude': latitude,
             'longitude': longitude,
             'check_interval': check_interval,

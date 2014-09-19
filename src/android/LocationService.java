@@ -22,7 +22,7 @@ public class LocationService extends CordovaPlugin {
                 PACKAGENAME = this.cordova.getActivity().getPackageName();
                 CLASSNAME = this.cordova.getActivity().getClass().getSimpleName();
                 JSONObject arg_object = args.getJSONObject(0);
-                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("arrived_title",arg_object.getString("arrived_title")).putExtra("arrived_message",arg_object.getString("arrived_message")).putExtra("start_title",arg_object.getString("start_title")).putExtra("stop_message",arg_object.getString("stop_message")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("check_interval",arg_object.getString("check_interval")).putExtra("arrived_range",arg_object.getString("arrived_range")).putExtra("package",PACKAGENAME).putExtra("class",CLASSNAME);
+                Intent intent = new Intent(this.cordova.getActivity(), LocationServiceMain.class).putExtra("arrived_title",arg_object.getString("arrived_title")).putExtra("arrived_message",arg_object.getString("arrived_message")).putExtra("start_title",arg_object.getString("start_title")).putExtra("start_message",arg_object.getString("start_message")).putExtra("latitude", arg_object.getString("latitude")).putExtra("longitude", arg_object.getString("longitude")).putExtra("check_interval",arg_object.getString("check_interval")).putExtra("arrived_range",arg_object.getString("arrived_range")).putExtra("package",PACKAGENAME).putExtra("class",CLASSNAME);
                 this.cordova.getActivity().startService(intent);
                 callbackContext.success();
                 return true;
