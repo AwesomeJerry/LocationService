@@ -92,7 +92,7 @@ public class LocationServiceMain extends Service{
         } catch (Exception e) {
             
         }
-        int iconNo = getResources().getIdentifier("icon", "drawable", PACKAGENAME);
+        int iconNo = getResources().getIdentifier("notiicon", "drawable", PACKAGENAME);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(iconNo)
@@ -197,7 +197,7 @@ public class LocationServiceMain extends Service{
                 Double lng = Double.parseDouble(LONGITUDE);
                 if(Math.abs(curLat - lat) < ARRIVED_RANGE && Math.abs(curLng - lng) < ARRIVED_RANGE) {
                     Log.i("LocationServiceMain", "You are there!");
-                    int iconNo = getResources().getIdentifier("icon", "drawable", PACKAGENAME);
+                    int iconNo = getResources().getIdentifier("notiicon", "drawable", PACKAGENAME);
                     int soundNo = getResources().getIdentifier("dingdong", "raw", PACKAGENAME);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(getApplicationContext())
