@@ -2,6 +2,7 @@ LocationService
 ============
 
 Phonegap LocationService Plugin
+
 Setting a destination Latitude Longitude, When you get near the LatLng, it will push a notification to your phone.
 
 Install
