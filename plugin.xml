@@ -25,4 +25,16 @@
         <source-file src="src/android/LocationService.java" target-dir="src/jerry/shen/plugin" />
         <source-file src="src/android/LocationServiceMain.java" target-dir="src/jerry/shen/plugin" />
     </platform>
+	
+	<!-- ios -->
+	<platform name="ios">
+		<config-file target="config.xml" parent="/*">
+			<feature name="LocationService">
+				<param name="ios-package" value="LocationService" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
+		<source-file src="src/ios/GashaTrip-Bridging-Header.h" target-dir="../"/>
+		<source-file src="src/ios/LocationService.swift" target-dir="Plugins"/>
+	</platform>
 </plugin>

@@ -1,10 +1,10 @@
 var locationService = {
-    startService: function(arrived_title, arrived_message, start_title, stop_message, latitude, longitude, check_interval, arrived_range, successCallback, errorCallback) {
+    startService: function(arrived_title, arrived_message, start_title, start_message, latitude, longitude, check_interval, arrived_range, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, 'LocationService', 'startService',[{
             'arrived_title': arrived_title,
             'arrived_message': arrived_message,
             'start_title': start_title,
-            'start_message': stop_message,
+            'start_message': start_message,
             'latitude': latitude,
             'longitude': longitude,
             'check_interval': check_interval,
