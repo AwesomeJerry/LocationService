@@ -34,7 +34,7 @@
 				<param name="onload" value="true" />
 			</feature>
 		</config-file>
-		<source-file src="src/ios/GashaTrip-Bridging-Header.h" target-dir="../"/>
+<!--		<source-file src="src/ios/GashaTrip-Bridging-Header.h" target-dir="../"/>-->
 		<source-file src="src/ios/LocationService.swift" target-dir="Plugins"/>
 	</platform>
 </plugin>
