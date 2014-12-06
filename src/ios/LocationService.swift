@@ -1,29 +1,50 @@
 import Foundation
+import CoreLocation
 
 // 位置監聽
 @objc(LocationService) class LocationService : CDVPlugin, CLLocationManagerDelegate {
 
     let localNoti: UILocalNotification = UILocalNotification()
 	let locationManager: CLLocationManager = CLLocationManager()
-	var arrived_title, arrived_message
-	var destination_lat: Double, destination_lng: Double, arrived_range: Double
+    var arrived_title: String = "", arrived_message: String = ""
+	var destination_lat: NSString = "", destination_lng: NSString = "", arrived_range: NSString = ""
 
 	// 啟動監聽
 	func startService(command: CDVInvokedUrlCommand) {
-		self.arrived_title = arrived_title
-		self.arrived_message = arrived_message
-		self.destination_lat = latitude
-		self.destination_lng = longitude
-		self.arrived_range = arrived_range
+        println("start")
+        var obj: AnyObject = command.arguments[0] as AnyObject!
+//        println( "Object is \(obj)" )
+        
+        arrived_title = obj["arrived_title"] as String
+        arrived_message = obj["arrived_message"] as String
+        destination_lat = obj["latitude"] as NSString
+        destination_lng = obj["longitude"] as NSString
+        arrived_range = obj["arrived_range"] as NSString
+
+//        println( "Arrived_title :: \(arrived_title)" )
+//        println( "Arrived_message :: \(arrived_message)" )
+//        println( "Latitude :: \(destination_lat)" )
+//        println( "Longitude :: \(destination_lng)" )
+//        println( "Arrived_range :: \(arrived_range)" )
 
 		if CLLocationManager.locationServicesEnabled() {
-			if self.locationManager.responseToSelector("requestAlwaysAuthorization") {
-				locationManager.requestAlwaysAuthorization()
-			} else {
+//			if self.locationManager.responseToSelector("requestAlwaysAuthorization") {
+//				locationManager.requestAlwaysAuthorization()
+//			} else {
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                locationManager.requestAlwaysAuthorization()
 				locationManager.startUpdatingLocation()
-			}
+//                println("start updating")
+//                var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("update"), userInfo: nil, repeats: true )
+//			}
 		}
 	}
+
+//    var i:Int = 1
+//    func update() {
+//        println(i++)
+//    }
 
 	// is triggered when new location updates are available.
 	func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
@@ -45,7 +66,10 @@ import Foundation
 	}
 
 	func checkDistance(lat: Double, lng: Double) {
-		if abs( lat - self.destination_lat ) <= arrived_range && abs( lng - destination_lng ) <= arrived_range {
+        println("checkDistance is called")
+        println(" Lat is \(lat) AND Ln is \(lng) ")
+		if abs( lat - self.destination_lat.doubleValue ) <= self.arrived_range.doubleValue {
+// && abs( lng - self.destination_lng.doublevalue() ) <= self.arrived_range.doubleValue()
 			locationManager.stopUpdatingLocation() //停止監聽
 
 			localNoti.alertAction = self.arrived_title
@@ -68,17 +92,18 @@ import Foundation
 				locationManager.startUpdatingLocation()
 			case .AuthorizedWhenInUse, .Restricted, .Denied:
 				println("AuthorizedWhenInUse or Restricted or Denied")
+                locationManager.requestAlwaysAuthorization()
 
-				let authAlert = UIAlertController(title: "Location Access Disabled", message: "In order to see local weather data, please open this app's settings and set location access to 'Always'.", preferredStyle: .Alert)
-				let launchSetting = UIAlertAction(title: "Setting", style: .Default, handler: { (action) in
-					if let url = NSURL(string: UIApplicationOpenSettingsURLString) {
-						UIApplication.sharedApplication().openURL(url)
-					}
-				})
-				let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-				authAlert.addAction(launchSetting)
-				authAlert.addAction(cancel)
-				presentViewController(authAlert, animated: true, completion: nil)
+//				let authAlert = UIAlertController(title: "Location Access Disabled", message: "In order to see local weather data, please open this app's settings and set location access to 'Always'.", preferredStyle: .Alert)
+//				let launchSetting = UIAlertAction(title: "Setting", style: .Default, handler: { (action) in
+//					if let url = NSURL(string: UIApplicationOpenSettingsURLString) {
+//						UIApplication.sharedApplication().openURL(url)
+//					}
+//				})
+//				let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+//				authAlert.addAction(launchSetting)
+//				authAlert.addAction(cancel)
+//				presentViewController(authAlert, animated: true, completion: nil)
 		}
 	}
 
